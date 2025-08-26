@@ -1,18 +1,19 @@
-import React, { useState, useEffect } from "react";
-import { useOutletContext } from "react-router-dom";
-import Header from "@/components/organisms/Header";
-import EmployeeCard from "@/components/molecules/EmployeeCard";
-import FilterBar from "@/components/molecules/FilterBar";
-import Button from "@/components/atoms/Button";
-import ApperIcon from "@/components/ApperIcon";
-import Loading from "@/components/ui/Loading";
-import Error from "@/components/ui/Error";
-import Empty from "@/components/ui/Empty";
+import React, { useEffect, useState } from "react";
+import { useOutletContext, useNavigate } from "react-router-dom";
 import { employeeService } from "@/services/api/employeeService";
 import { departmentService } from "@/services/api/departmentService";
+import ApperIcon from "@/components/ApperIcon";
+import FilterBar from "@/components/molecules/FilterBar";
+import EmployeeCard from "@/components/molecules/EmployeeCard";
+import Button from "@/components/atoms/Button";
+import Header from "@/components/organisms/Header";
+import Error from "@/components/ui/Error";
+import Empty from "@/components/ui/Empty";
+import Loading from "@/components/ui/Loading";
 
 const Employees = () => {
   const { onMenuClick } = useOutletContext();
+  const navigate = useNavigate();
   const [employees, setEmployees] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -110,9 +111,12 @@ const filteredEmployees = employees.filter(employee => {
               >
                 <ApperIcon name="List" size={16} />
               </Button>
-            </div>
+</div>
             
-            <Button variant="primary">
+            <Button 
+              variant="primary" 
+              onClick={() => navigate('/employees/new')}
+            >
               <ApperIcon name="UserPlus" size={16} className="mr-2" />
               Add Employee
             </Button>
