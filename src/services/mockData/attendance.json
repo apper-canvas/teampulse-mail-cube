@@ -1,0 +1,182 @@
+[
+  {
+    "Id": 1,
+    "employeeId": 1,
+    "employeeName": "Sarah Johnson",
+    "date": "2024-02-01",
+    "checkIn": "09:00",
+    "checkOut": "17:30",
+    "status": "Present"
+  },
+  {
+    "Id": 2,
+    "employeeId": 2,
+    "employeeName": "Michael Chen",
+    "date": "2024-02-01",
+    "checkIn": "08:45",
+    "checkOut": "17:15",
+    "status": "Present"
+  },
+  {
+    "Id": 3,
+    "employeeId": 3,
+    "employeeName": "Emily Rodriguez",
+    "date": "2024-02-01",
+    "checkIn": "09:15",
+    "checkOut": "17:45",
+    "status": "Late"
+  },
+  {
+    "Id": 4,
+    "employeeId": 5,
+    "employeeName": "Jessica Wang",
+    "date": "2024-02-01",
+    "checkIn": "08:30",
+    "checkOut": "17:00",
+    "status": "Present"
+  },
+  {
+    "Id": 5,
+    "employeeId": 6,
+    "employeeName": "Robert Davis",
+    "date": "2024-02-01",
+    "checkIn": null,
+    "checkOut": null,
+    "status": "Absent"
+  },
+  {
+    "Id": 6,
+    "employeeId": 7,
+    "employeeName": "Amanda Miller",
+    "date": "2024-02-01",
+    "checkIn": "09:00",
+    "checkOut": "17:30",
+    "status": "Present"
+  },
+  {
+    "Id": 7,
+    "employeeId": 8,
+    "employeeName": "James Wilson",
+    "date": "2024-02-01",
+    "checkIn": "08:50",
+    "checkOut": "17:20",
+    "status": "Present"
+  },
+  {
+    "Id": 8,
+    "employeeId": 9,
+    "employeeName": "Lisa Brown",
+    "date": "2024-02-01",
+    "checkIn": "09:10",
+    "checkOut": "17:40",
+    "status": "Late"
+  },
+  {
+    "Id": 9,
+    "employeeId": 11,
+    "employeeName": "Rachel Kim",
+    "date": "2024-02-01",
+    "checkIn": "08:55",
+    "checkOut": "17:25",
+    "status": "Present"
+  },
+  {
+    "Id": 10,
+    "employeeId": 12,
+    "employeeName": "Chris Anderson",
+    "date": "2024-02-01",
+    "checkIn": "09:05",
+    "checkOut": "17:35",
+    "status": "Present"
+  },
+  {
+    "Id": 11,
+    "employeeId": 1,
+    "employeeName": "Sarah Johnson",
+    "date": "2024-01-31",
+    "checkIn": "09:00",
+    "checkOut": "17:30",
+    "status": "Present"
+  },
+  {
+    "Id": 12,
+    "employeeId": 2,
+    "employeeName": "Michael Chen",
+    "date": "2024-01-31",
+    "checkIn": "08:45",
+    "checkOut": "17:15",
+    "status": "Present"
+  },
+  {
+    "Id": 13,
+    "employeeId": 3,
+    "employeeName": "Emily Rodriguez",
+    "date": "2024-01-31",
+    "checkIn": "09:00",
+    "checkOut": "17:30",
+    "status": "Present"
+  },
+  {
+    "Id": 14,
+    "employeeId": 5,
+    "employeeName": "Jessica Wang",
+    "date": "2024-01-31",
+    "checkIn": "08:30",
+    "checkOut": "17:00",
+    "status": "Present"
+  },
+  {
+    "Id": 15,
+    "employeeId": 6,
+    "employeeName": "Robert Davis",
+    "date": "2024-01-31",
+    "checkIn": "09:20",
+    "checkOut": "17:50",
+    "status": "Late"
+  },
+  {
+    "Id": 16,
+    "employeeId": 7,
+    "employeeName": "Amanda Miller",
+    "date": "2024-01-30",
+    "checkIn": "09:00",
+    "checkOut": "17:30",
+    "status": "Present"
+  },
+  {
+    "Id": 17,
+    "employeeId": 8,
+    "employeeName": "James Wilson",
+    "date": "2024-01-30",
+    "checkIn": "08:50",
+    "checkOut": "17:20",
+    "status": "Present"
+  },
+  {
+    "Id": 18,
+    "employeeId": 9,
+    "employeeName": "Lisa Brown",
+    "date": "2024-01-30",
+    "checkIn": "09:00",
+    "checkOut": "17:30",
+    "status": "Present"
+  },
+  {
+    "Id": 19,
+    "employeeId": 11,
+    "employeeName": "Rachel Kim",
+    "date": "2024-01-29",
+    "checkIn": null,
+    "checkOut": null,
+    "status": "Absent"
+  },
+  {
+    "Id": 20,
+    "employeeId": 12,
+    "employeeName": "Chris Anderson",
+    "date": "2024-01-29",
+    "checkIn": "09:05",
+    "checkOut": "17:35",
+    "status": "Present"
+  }
+]

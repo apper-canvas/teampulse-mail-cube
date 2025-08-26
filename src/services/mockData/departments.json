@@ -1,0 +1,65 @@
+[
+  {
+    "Id": 1,
+    "name": "Engineering",
+    "managerId": 1,
+    "parentDepartment": null,
+    "description": "Software development and technical operations"
+  },
+  {
+    "Id": 2,
+    "name": "Product",
+    "managerId": 2,
+    "parentDepartment": null,
+    "description": "Product strategy and management"
+  },
+  {
+    "Id": 3,
+    "name": "Design",
+    "managerId": 3,
+    "parentDepartment": null,
+    "description": "User experience and interface design"
+  },
+  {
+    "Id": 4,
+    "name": "Marketing",
+    "managerId": 4,
+    "parentDepartment": null,
+    "description": "Brand marketing and customer acquisition"
+  },
+  {
+    "Id": 5,
+    "name": "Sales",
+    "managerId": 6,
+    "parentDepartment": null,
+    "description": "Revenue generation and client relations"
+  },
+  {
+    "Id": 6,
+    "name": "Human Resources",
+    "managerId": 7,
+    "parentDepartment": null,
+    "description": "Employee relations and organizational development"
+  },
+  {
+    "Id": 7,
+    "name": "Finance",
+    "managerId": 8,
+    "parentDepartment": null,
+    "description": "Financial planning and analysis"
+  },
+  {
+    "Id": 8,
+    "name": "Customer Success",
+    "managerId": 10,
+    "parentDepartment": null,
+    "description": "Customer support and success management"
+  },
+  {
+    "Id": 9,
+    "name": "Operations",
+    "managerId": 12,
+    "parentDepartment": null,
+    "description": "Business operations and process optimization"
+  }
+]
