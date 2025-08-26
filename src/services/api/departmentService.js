@@ -1,7 +1,5 @@
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
 export const departmentService = {
   async getAll() {
     try {
