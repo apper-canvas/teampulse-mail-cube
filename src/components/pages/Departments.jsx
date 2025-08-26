@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
+import { toast } from "react-toastify";
 import Header from "@/components/organisms/Header";
 import Card from "@/components/atoms/Card";
 import Button from "@/components/atoms/Button";
 import Avatar from "@/components/atoms/Avatar";
+import Input from "@/components/atoms/Input";
 import ApperIcon from "@/components/ApperIcon";
 import Loading from "@/components/ui/Loading";
 import Error from "@/components/ui/Error";
@@ -18,7 +20,13 @@ const Departments = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [selectedDepartment, setSelectedDepartment] = useState(null);
-
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [addLoading, setAddLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    description: "",
+    managerId: ""
+  });
   useEffect(() => {
     loadData();
   }, []);
@@ -40,6 +48,57 @@ const Departments = () => {
     } finally {
       setLoading(false);
     }
+};
+
+  const handleAddDepartment = async (e) => {
+    e.preventDefault();
+    
+    if (!formData.name.trim()) {
+      toast.error("Department name is required");
+      return;
+    }
+    
+    if (!formData.description.trim()) {
+      toast.error("Department description is required");
+      return;
+    }
+
+    try {
+      setAddLoading(true);
+      
+      const newDepartment = {
+        name: formData.name.trim(),
+        description: formData.description.trim(),
+        managerId: formData.managerId ? parseInt(formData.managerId) : null,
+        parentDepartment: null
+      };
+      
+      await departmentService.create(newDepartment);
+      
+      toast.success("Department created successfully!");
+      setShowAddModal(false);
+      setFormData({ name: "", description: "", managerId: "" });
+      
+      // Reload data to show new department
+      await loadData();
+      
+    } catch (err) {
+      toast.error("Failed to create department. Please try again.");
+    } finally {
+      setAddLoading(false);
+    }
+  };
+
+  const handleInputChange = (field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const handleCloseModal = () => {
+    setShowAddModal(false);
+    setFormData({ name: "", description: "", managerId: "" });
   };
 
   const getDepartmentEmployees = (departmentName) => {
@@ -205,9 +264,13 @@ const Departments = () => {
           </div>
         )}
 
-        {/* Add Department Button */}
+{/* Add Department Button */}
         <div className="flex justify-center">
-          <Button variant="primary" size="lg">
+          <Button 
+            variant="primary" 
+            size="lg"
+            onClick={() => setShowAddModal(true)}
+          >
             <ApperIcon name="Plus" size={16} className="mr-2" />
             Add New Department
           </Button>
@@ -288,6 +351,116 @@ const Departments = () => {
                     </div>
                   </div>
                 </div>
+              </div>
+            </Card>
+          </div>
+)}
+
+        {/* Add Department Modal */}
+        {showAddModal && (
+          <div 
+            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+            onClick={handleCloseModal}
+          >
+            <Card 
+              className="max-w-md w-full"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-xl font-bold text-slate-900">
+                    Add New Department
+                  </h2>
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    onClick={handleCloseModal}
+                  >
+                    <ApperIcon name="X" size={16} />
+                  </Button>
+                </div>
+                
+                <form onSubmit={handleAddDepartment} className="space-y-4">
+                  <div>
+                    <label htmlFor="name" className="block text-sm font-medium text-slate-700 mb-1">
+                      Department Name *
+                    </label>
+                    <Input
+                      id="name"
+                      type="text"
+                      value={formData.name}
+                      onChange={(e) => handleInputChange('name', e.target.value)}
+                      placeholder="Enter department name"
+                      disabled={addLoading}
+                    />
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="description" className="block text-sm font-medium text-slate-700 mb-1">
+                      Description *
+                    </label>
+                    <Input
+                      id="description"
+                      type="text"
+                      value={formData.description}
+                      onChange={(e) => handleInputChange('description', e.target.value)}
+                      placeholder="Enter department description"
+                      disabled={addLoading}
+                    />
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="manager" className="block text-sm font-medium text-slate-700 mb-1">
+                      Department Manager (Optional)
+                    </label>
+                    <select
+                      id="manager"
+                      value={formData.managerId}
+                      onChange={(e) => handleInputChange('managerId', e.target.value)}
+                      disabled={addLoading}
+                      className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <option value="">Select a manager</option>
+                      {employees.map((employee) => (
+                        <option key={employee.Id} value={employee.Id}>
+                          {employee.firstName} {employee.lastName} - {employee.role}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  
+                  <div className="flex space-x-3 pt-4">
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      size="default"
+                      onClick={handleCloseModal}
+                      disabled={addLoading}
+                      className="flex-1"
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      type="submit"
+                      variant="primary"
+                      size="default"
+                      disabled={addLoading}
+                      className="flex-1"
+                    >
+                      {addLoading ? (
+                        <>
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                          Creating...
+                        </>
+                      ) : (
+                        <>
+                          <ApperIcon name="Plus" size={16} className="mr-2" />
+                          Create Department
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </form>
               </div>
             </Card>
           </div>
