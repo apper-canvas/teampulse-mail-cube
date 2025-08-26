@@ -16,14 +16,14 @@ const FilterBar = ({
   return (
     <div className="flex flex-wrap items-center gap-4">
       <Select 
-        value={departmentFilter} 
+value={departmentFilter} 
         onChange={(e) => setDepartmentFilter(e.target.value)}
         className="w-48"
       >
         <option value="">All Departments</option>
         {departments.map(dept => (
-          <option key={dept.Id} value={dept.name}>
-            {dept.name}
+          <option key={dept.Id} value={dept.Name}>
+            {dept.Name}
           </option>
         ))}
       </Select>

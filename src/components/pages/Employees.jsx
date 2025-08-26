@@ -45,14 +45,14 @@ const Employees = () => {
     }
   };
 
-  const filteredEmployees = employees.filter(employee => {
-    const matchesSearch = `${employee.firstName} ${employee.lastName}`.toLowerCase()
+const filteredEmployees = employees.filter(employee => {
+    const matchesSearch = `${employee.first_name_c || ''} ${employee.last_name_c || ''}`.toLowerCase()
       .includes(searchTerm.toLowerCase()) ||
-      employee.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      employee.role.toLowerCase().includes(searchTerm.toLowerCase());
+      (employee.email_c || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (employee.role_c || '').toLowerCase().includes(searchTerm.toLowerCase());
     
-    const matchesDepartment = !departmentFilter || employee.department === departmentFilter;
-    const matchesStatus = !statusFilter || employee.status === statusFilter;
+    const matchesDepartment = !departmentFilter || employee.department_c === departmentFilter;
+    const matchesStatus = !statusFilter || employee.status_c === statusFilter;
     
     return matchesSearch && matchesDepartment && matchesStatus;
   });

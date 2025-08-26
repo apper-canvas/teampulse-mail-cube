@@ -1,88 +1,174 @@
-import timeOffData from "@/services/mockData/timeOffRequests.json";
+const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 export const timeOffService = {
   async getAll() {
-    await delay(300);
-    return [...timeOffData];
+    try {
+      const { ApperClient } = window.ApperSDK;
+      const apperClient = new ApperClient({
+        apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+        apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+      });
+
+      const params = {
+        fields: [
+          { field: { Name: "Name" } },
+          { field: { Name: "employee_name_c" } },
+          { field: { Name: "type_c" } },
+          { field: { Name: "start_date_c" } },
+          { field: { Name: "end_date_c" } },
+          { field: { Name: "reason_c" } },
+          { field: { Name: "status_c" } },
+          { field: { Name: "approved_by_c" } },
+          { field: { Name: "submitted_date_c" } },
+          { field: { Name: "employee_id_c" } }
+        ]
+      };
+
+      const response = await apperClient.fetchRecords('time_off_request_c', params);
+      if (!response.success) {
+        console.error(response.message);
+        return [];
+      }
+      return response.data || [];
+    } catch (error) {
+      if (error?.response?.data?.message) {
+        console.error("Error fetching time off requests:", error?.response?.data?.message);
+      } else {
+        console.error(error);
+      }
+      return [];
+    }
   },
 
   async getById(id) {
-    await delay(200);
-    const request = timeOffData.find(req => req.Id === id);
-    if (!request) {
-      throw new Error("Time off request not found");
+    try {
+      const { ApperClient } = window.ApperSDK;
+      const apperClient = new ApperClient({
+        apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+        apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+      });
+
+      const params = {
+        fields: [
+          { field: { Name: "Name" } },
+          { field: { Name: "employee_name_c" } },
+          { field: { Name: "type_c" } },
+          { field: { Name: "start_date_c" } },
+          { field: { Name: "end_date_c" } },
+          { field: { Name: "reason_c" } },
+          { field: { Name: "status_c" } },
+          { field: { Name: "approved_by_c" } },
+          { field: { Name: "submitted_date_c" } },
+          { field: { Name: "employee_id_c" } }
+        ]
+      };
+
+      const response = await apperClient.getRecordById('time_off_request_c', id, params);
+      if (!response.success) {
+        console.error(response.message);
+        return null;
+      }
+      return response.data;
+    } catch (error) {
+      if (error?.response?.data?.message) {
+        console.error(`Error fetching time off request with ID ${id}:`, error?.response?.data?.message);
+      } else {
+        console.error(error);
+      }
+      return null;
     }
-    return { ...request };
   },
 
   async getByEmployeeId(employeeId) {
-    await delay(300);
-    return timeOffData.filter(req => req.employeeId === employeeId).map(req => ({ ...req }));
-  },
+    try {
+      const { ApperClient } = window.ApperSDK;
+      const apperClient = new ApperClient({
+        apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+        apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+      });
 
-  async create(requestData) {
-    await delay(400);
-    const maxId = Math.max(...timeOffData.map(req => req.Id));
-    const newRequest = {
-      Id: maxId + 1,
-      ...requestData,
-      status: "Pending",
-      submittedDate: new Date().toISOString().split("T")[0]
-    };
-    timeOffData.push(newRequest);
-    return { ...newRequest };
+      const params = {
+        fields: [
+          { field: { Name: "Name" } },
+          { field: { Name: "employee_name_c" } },
+          { field: { Name: "type_c" } },
+          { field: { Name: "start_date_c" } },
+          { field: { Name: "end_date_c" } },
+          { field: { Name: "reason_c" } },
+          { field: { Name: "status_c" } },
+          { field: { Name: "approved_by_c" } },
+          { field: { Name: "submitted_date_c" } },
+          { field: { Name: "employee_id_c" } }
+        ],
+        where: [
+          {
+            FieldName: "employee_id_c",
+            Operator: "EqualTo",
+            Values: [employeeId]
+          }
+        ]
+      };
+
+      const response = await apperClient.fetchRecords('time_off_request_c', params);
+      if (!response.success) {
+        console.error(response.message);
+        return [];
+      }
+      return response.data || [];
+    } catch (error) {
+      if (error?.response?.data?.message) {
+        console.error("Error fetching time off requests by employee:", error?.response?.data?.message);
+      } else {
+        console.error(error);
+      }
+      return [];
+    }
   },
 
   async updateStatus(id, status, approvedBy = null) {
-    await delay(350);
-    const index = timeOffData.findIndex(req => req.Id === id);
-    if (index === -1) {
-      throw new Error("Time off request not found");
+    try {
+      const { ApperClient } = window.ApperSDK;
+      const apperClient = new ApperClient({
+        apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+        apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+      });
+
+      const params = {
+        records: [
+          {
+            Id: parseInt(id),
+            status_c: status,
+            approved_by_c: status !== "Pending" ? approvedBy : null
+          }
+        ]
+      };
+
+      const response = await apperClient.updateRecord('time_off_request_c', params);
+      if (!response.success) {
+        console.error(response.message);
+        return null;
+      }
+      
+      if (response.results) {
+        const successfulUpdates = response.results.filter(result => result.success);
+        const failedUpdates = response.results.filter(result => !result.success);
+        
+        if (failedUpdates.length > 0) {
+          console.error(`Failed to update time off status ${failedUpdates.length} records:${JSON.stringify(failedUpdates)}`);
+        }
+        
+        return successfulUpdates.length > 0 ? successfulUpdates[0].data : null;
+      }
+      return null;
+    } catch (error) {
+      if (error?.response?.data?.message) {
+        console.error("Error updating time off status:", error?.response?.data?.message);
+      } else {
+        console.error(error);
+      }
+      return null;
     }
-    timeOffData[index] = { 
-      ...timeOffData[index], 
-      status, 
-      approvedBy: status !== "Pending" ? approvedBy : null 
-    };
-    return { ...timeOffData[index] };
-  },
-
-  async update(id, updates) {
-    await delay(350);
-    const index = timeOffData.findIndex(req => req.Id === id);
-    if (index === -1) {
-      throw new Error("Time off request not found");
-    }
-    timeOffData[index] = { ...timeOffData[index], ...updates };
-    return { ...timeOffData[index] };
-  },
-
-  async delete(id) {
-    await delay(250);
-    const index = timeOffData.findIndex(req => req.Id === id);
-    if (index === -1) {
-      throw new Error("Time off request not found");
-    }
-    const deleted = timeOffData.splice(index, 1)[0];
-    return { ...deleted };
-  },
-
-  async getByStatus(status) {
-    await delay(300);
-    return timeOffData.filter(req => req.status === status).map(req => ({ ...req }));
-  },
-
-  async getByDateRange(startDate, endDate) {
-    await delay(300);
-    return timeOffData.filter(req => {
-      const reqStart = new Date(req.startDate);
-      const reqEnd = new Date(req.endDate);
-      const rangeStart = new Date(startDate);
-      const rangeEnd = new Date(endDate);
-      return (reqStart >= rangeStart && reqStart <= rangeEnd) || 
-             (reqEnd >= rangeStart && reqEnd <= rangeEnd);
-    }).map(req => ({ ...req }));
   }
 };

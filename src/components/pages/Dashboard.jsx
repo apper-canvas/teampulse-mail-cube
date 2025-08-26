@@ -50,26 +50,26 @@ const Dashboard = () => {
   if (loading) return <Loading />;
   if (error) return <Error message={error} onRetry={loadDashboardData} />;
 
-  const activeEmployees = employees.filter(emp => emp.status === "Active");
-  const pendingRequests = timeOffRequests.filter(req => req.status === "Pending");
+const activeEmployees = employees.filter(emp => emp.status_c === "Active");
+const pendingRequests = timeOffRequests.filter(req => req.status_c === "Pending");
   const todayDate = format(new Date(), "yyyy-MM-dd");
-  const todayAttendance = attendance.filter(att => att.date === todayDate);
-  const upcomingTimeOff = timeOffRequests
-    .filter(req => req.status === "Approved" && new Date(req.startDate) > new Date())
-    .sort((a, b) => new Date(a.startDate) - new Date(b.startDate))
+const todayAttendance = attendance.filter(att => att.date_c === todayDate);
+const upcomingTimeOff = timeOffRequests
+    .filter(req => req.status_c === "Approved" && new Date(req.start_date_c) > new Date())
+    .sort((a, b) => new Date(a.start_date_c) - new Date(b.start_date_c))
     .slice(0, 5);
 
   const recentActivity = [
-    ...timeOffRequests.slice(0, 3).map(req => ({
+...timeOffRequests.slice(0, 3).map(req => ({
       type: "time-off",
-      message: `${req.employeeName} requested time off`,
+      message: `${req.employee_name_c} requested time off`,
       time: "2 hours ago",
-      status: req.status
+      status: req.status_c
     })),
-    ...todayAttendance.slice(0, 2).map(att => ({
+...todayAttendance.slice(0, 2).map(att => ({
       type: "attendance",
-      message: `${att.employeeName} checked in`,
-      time: att.checkIn,
+      message: `${att.employee_name_c} checked in`,
+      time: att.check_in_c,
       status: "success"
     }))
   ].slice(0, 5);
@@ -151,21 +151,21 @@ const Dashboard = () => {
             <div className="space-y-4">
               {upcomingTimeOff.length > 0 ? (
                 upcomingTimeOff.map((request) => (
-                  <div key={request.Id} className="flex items-center space-x-3">
-                    <Avatar 
-                      alt={request.employeeName} 
+<div key={request.Id} className="flex items-center space-x-3">
+<Avatar 
+                      alt={request.employee_name_c} 
                       size="sm"
                     />
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-slate-900">
-                        {request.employeeName}
+{request.employee_name_c}
                       </p>
                       <p className="text-xs text-slate-500">
-                        {format(new Date(request.startDate), "MMM dd")} - {format(new Date(request.endDate), "MMM dd")}
+{format(new Date(request.start_date_c), "MMM dd")} - {format(new Date(request.end_date_c), "MMM dd")}
                       </p>
                     </div>
-                    <Badge variant="primary" className="text-xs">
-                      {request.type}
+<Badge variant="primary" className="text-xs">
+                      {request.type_c}
                     </Badge>
                   </div>
                 ))

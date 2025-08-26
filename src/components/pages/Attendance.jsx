@@ -1,17 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
-import Header from "@/components/organisms/Header";
-import Card from "@/components/atoms/Card";
-import Badge from "@/components/atoms/Badge";
-import Button from "@/components/atoms/Button";
-import Select from "@/components/atoms/Select";
-import Avatar from "@/components/atoms/Avatar";
-import ApperIcon from "@/components/ApperIcon";
-import Loading from "@/components/ui/Loading";
-import Error from "@/components/ui/Error";
 import { attendanceService } from "@/services/api/attendanceService";
 import { employeeService } from "@/services/api/employeeService";
-import { format, subDays, startOfWeek, endOfWeek, eachDayOfInterval } from "date-fns";
+import { eachDayOfInterval, endOfWeek, format, startOfWeek, subDays } from "date-fns";
+import ApperIcon from "@/components/ApperIcon";
+import Card from "@/components/atoms/Card";
+import Select from "@/components/atoms/Select";
+import Button from "@/components/atoms/Button";
+import Badge from "@/components/atoms/Badge";
+import Avatar from "@/components/atoms/Avatar";
+import Employees from "@/components/pages/Employees";
+import Header from "@/components/organisms/Header";
+import Error from "@/components/ui/Error";
+import Loading from "@/components/ui/Loading";
 
 const Attendance = () => {
   const { onMenuClick } = useOutletContext();
@@ -32,7 +33,7 @@ const Attendance = () => {
       setLoading(true);
       setError("");
       
-      const [attendanceData, employeesData] = await Promise.all([
+const [attendanceData, employeesData] = await Promise.all([
         attendanceService.getAll(),
         employeeService.getAll()
       ]);
@@ -47,7 +48,7 @@ const Attendance = () => {
   };
 
   const getDailyAttendance = () => {
-    return attendance.filter(record => record.date === selectedDate);
+return attendance.filter(record => record.date_c === selectedDate);
   };
 
   const getWeeklyAttendance = () => {
@@ -57,7 +58,7 @@ const Attendance = () => {
     
     return weekDays.map(day => {
       const dateStr = format(day, "yyyy-MM-dd");
-      const dayAttendance = attendance.filter(record => record.date === dateStr);
+const dayAttendance = attendance.filter(record => record.date_c === dateStr);
       return {
         date: dateStr,
         day: format(day, "EEE"),
@@ -68,9 +69,9 @@ const Attendance = () => {
 
   const getAttendanceStats = () => {
     const totalEmployees = employees.length;
-    const presentToday = getDailyAttendance().filter(record => record.status === "Present").length;
+const presentToday = getDailyAttendance().filter(record => record.status_c === "Present").length;
     const absentToday = totalEmployees - presentToday;
-    const lateToday = getDailyAttendance().filter(record => record.status === "Late").length;
+const lateToday = getDailyAttendance().filter(record => record.status_c === "Late").length;
 
     return {
       present: presentToday,
@@ -230,9 +231,9 @@ const Attendance = () => {
                   </thead>
                   <tbody className="divide-y divide-slate-200">
                     {dailyRecords.map((record) => {
-                      const employee = employees.find(emp => emp.Id === record.employeeId);
-                      const checkInTime = record.checkIn ? new Date(`2000-01-01 ${record.checkIn}`) : null;
-                      const checkOutTime = record.checkOut ? new Date(`2000-01-01 ${record.checkOut}`) : null;
+const employee = employees.find(emp => emp.Id === record.employee_id_c?.Id || record.employee_id_c);
+const checkInTime = record.check_in_c ? new Date(`2000-01-01 ${record.check_in_c}`) : null;
+                      const checkOutTime = record.check_out_c ? new Date(`2000-01-01 ${record.check_out_c}`) : null;
                       const hours = checkInTime && checkOutTime 
                         ? ((checkOutTime - checkInTime) / (1000 * 60 * 60)).toFixed(1)
                         : "-";
@@ -242,33 +243,34 @@ const Attendance = () => {
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="flex items-center space-x-3">
                               <Avatar 
-                                src={employee?.photo} 
-                                alt={employee?.firstName + " " + employee?.lastName}
+src={employee?.photo_c} 
+                                alt={employee?.first_name_c + " " + employee?.last_name_c}
                                 size="sm"
                               />
                               <div>
                                 <p className="text-sm font-medium text-slate-900">
-                                  {employee?.firstName} {employee?.lastName}
+{employee?.first_name_c} {employee?.last_name_c}
                                 </p>
+                                <p className="text-xs text-slate-500">{employee?.role_c}</p>
                                 <p className="text-sm text-slate-500">{employee?.role}</p>
                               </div>
                             </div>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-600">
-                            {record.checkIn || "-"}
+<td className="px-6 py-4 whitespace-nowrap text-sm text-slate-600">
+                            {record.check_in_c || "-"}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-600">
-                            {record.checkOut || "-"}
+                            {record.check_out_c || "-"}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-600">
                             {hours}h
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <Badge variant={
-                              record.status === "Present" ? "success" :
-                              record.status === "Late" ? "warning" : "danger"
+                              record.status_c === "Present" ? "success" :
+                              record.status_c === "Late" ? "warning" : "danger"
                             }>
-                              {record.status}
+                              {record.status_c}
                             </Badge>
                           </td>
                         </tr>
@@ -323,36 +325,38 @@ const Attendance = () => {
                 </thead>
                 <tbody className="divide-y divide-slate-200">
                   {employees.slice(0, 10).map((employee) => (
-                    <tr key={employee.Id} className="hover:bg-slate-50">
+<tr key={employee.Id} className="hover:bg-slate-50">
                       <td className="px-4 py-4 whitespace-nowrap">
                         <div className="flex items-center space-x-3">
                           <Avatar 
-                            src={employee.photo} 
-                            alt={`${employee.firstName} ${employee.lastName}`}
+src={employee.photo_c} 
+                            alt={`${employee.first_name_c} ${employee.last_name_c}`}
                             size="sm"
                           />
                           <div>
-                            <p className="text-sm font-medium text-slate-900">
-                              {employee.firstName} {employee.lastName}
+<p className="text-sm font-medium text-slate-900">
+                              {employee.first_name_c} {employee.last_name_c}
                             </p>
-                            <p className="text-sm text-slate-500">{employee.role}</p>
+                            <p className="text-xs text-slate-500">{employee.role_c}</p>
                           </div>
                         </div>
                       </td>
-                      {weeklyData.map(day => {
-                        const dayRecord = day.records.find(record => record.employeeId === employee.Id);
+{weeklyData.map(day => {
+                        const dayRecord = day.records.find(record => 
+                          record.employee_id_c?.Id === employee.Id || record.employee_id_c === employee.Id
+                        );
                         return (
                           <td key={day.date} className="px-4 py-4 text-center">
                             {dayRecord ? (
-                              <Badge 
+<Badge 
                                 variant={
-                                  dayRecord.status === "Present" ? "success" :
-                                  dayRecord.status === "Late" ? "warning" : "danger"
+                                  dayRecord?.status_c === "Present" ? "success" :
+                                  dayRecord?.status_c === "Late" ? "warning" : "danger"
                                 }
                                 className="text-xs"
                               >
-                                {dayRecord.status === "Present" ? "P" : 
-                                 dayRecord.status === "Late" ? "L" : "A"}
+                                {dayRecord?.status_c === "Present" ? "P" : 
+                                 dayRecord?.status_c === "Late" ? "L" : "A"}
                               </Badge>
                             ) : (
                               <span className="text-slate-300">-</span>

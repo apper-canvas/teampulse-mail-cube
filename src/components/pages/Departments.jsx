@@ -67,10 +67,10 @@ const Departments = () => {
       setAddLoading(true);
       
       const newDepartment = {
-        name: formData.name.trim(),
-        description: formData.description.trim(),
-        managerId: formData.managerId ? parseInt(formData.managerId) : null,
-        parentDepartment: null
+Name: formData.name.trim(),
+        description_c: formData.description.trim(),
+        manager_id_c: formData.managerId ? parseInt(formData.managerId) : null,
+        parent_department_c: null
       };
       
       await departmentService.create(newDepartment);
@@ -102,21 +102,21 @@ const Departments = () => {
   };
 
   const getDepartmentEmployees = (departmentName) => {
-    return employees.filter(emp => emp.department === departmentName);
+return employees.filter(emp => emp.department_c === departmentName);
   };
 
   const getDepartmentManager = (managerId) => {
-    return employees.find(emp => emp.Id === managerId);
+return employees.find(emp => emp.Id === (managerId?.Id || managerId));
   };
 
   const getDepartmentStats = () => {
     return departments.map(dept => {
       const deptEmployees = getDepartmentEmployees(dept.name);
       const manager = getDepartmentManager(dept.managerId);
-      return {
+return {
         ...dept,
         employeeCount: deptEmployees.length,
-        activeEmployees: deptEmployees.filter(emp => emp.status === "Active").length,
+        activeEmployees: deptEmployees.filter(emp => emp.status_c === "Active").length,
         manager: manager
       };
     });
@@ -169,7 +169,7 @@ const Departments = () => {
               <div>
                 <p className="text-sm text-slate-600">Active Employees</p>
                 <p className="text-xl font-bold text-slate-900">
-                  {employees.filter(emp => emp.status === "Active").length}
+{employees.filter(emp => emp.status_c === "Active").length}
                 </p>
               </div>
             </div>
@@ -191,7 +191,7 @@ const Departments = () => {
               
               return (
                 <Card 
-                  key={dept.Id} 
+key={dept.Id} 
                   className="p-6 hover cursor-pointer"
                   onClick={() => setSelectedDepartment(dept)}
                 >
@@ -214,11 +214,17 @@ const Departments = () => {
                   
                   {dept.manager && (
                     <div className="flex items-center space-x-3 mb-4 p-3 bg-slate-50 rounded-lg">
-                      <Avatar 
-                        src={dept.manager.photo} 
-                        alt={`${dept.manager.firstName} ${dept.manager.lastName}`}
+<Avatar 
+                        src={dept.manager?.photo_c} 
+                        alt={`${dept.manager?.first_name_c} ${dept.manager?.last_name_c}`}
                         size="sm"
                       />
+                      <div>
+                        <p className="text-sm font-medium text-slate-900">
+                          {dept.manager?.first_name_c} {dept.manager?.last_name_c}
+                        </p>
+                        <p className="text-xs text-slate-500">{dept.manager?.role_c}</p>
+                      </div>
                       <div>
                         <p className="text-sm font-medium text-slate-900">
                           {dept.manager.firstName} {dept.manager.lastName}
@@ -235,13 +241,13 @@ const Departments = () => {
                     </div>
                     
                     {deptEmployees.length > 0 && (
-                      <div className="flex items-center space-x-2">
+<div className="flex items-center space-x-2">
                         <div className="flex -space-x-2">
                           {deptEmployees.slice(0, 4).map((employee) => (
                             <Avatar
                               key={employee.Id}
-                              src={employee.photo}
-                              alt={`${employee.firstName} ${employee.lastName}`}
+                              src={employee.photo_c}
+                              alt={`${employee.first_name_c} ${employee.last_name_c}`}
                               size="sm"
                               className="ring-2 ring-white"
                             />
@@ -289,7 +295,7 @@ const Departments = () => {
               <div className="p-6">
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-xl font-bold text-slate-900">
-                    {selectedDepartment.name} Department
+{selectedDepartment.Name} Department
                   </h2>
                   <Button 
                     variant="ghost" 
@@ -325,25 +331,25 @@ const Departments = () => {
                       Team Members ({getDepartmentEmployees(selectedDepartment.name).length})
                     </h3>
                     <div className="space-y-3">
-                      {getDepartmentEmployees(selectedDepartment.name).map((employee) => (
+{getDepartmentEmployees(selectedDepartment.Name).map((employee) => (
                         <div key={employee.Id} className="flex items-center space-x-3 p-3 bg-slate-50 rounded-lg">
                           <Avatar 
-                            src={employee.photo} 
-                            alt={`${employee.firstName} ${employee.lastName}`}
+                            src={employee.photo_c} 
+                            alt={`${employee.first_name_c} ${employee.last_name_c}`}
                           />
                           <div className="flex-1">
                             <p className="font-medium text-slate-900">
-                              {employee.firstName} {employee.lastName}
+                              {employee.first_name_c} {employee.last_name_c}
                             </p>
-                            <p className="text-sm text-slate-600">{employee.role}</p>
+                            <p className="text-sm text-slate-600">{employee.role_c}</p>
                           </div>
                           <div className="text-right">
                             <div className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                              employee.status === "Active" ? "status-active text-white" :
-                              employee.status === "Inactive" ? "status-inactive text-white" :
+                              employee.status_c === "Active" ? "status-active text-white" :
+                              employee.status_c === "Inactive" ? "status-inactive text-white" :
                               "status-pending text-white"
                             }`}>
-                              {employee.status}
+                              {employee.status_c}
                             </div>
                           </div>
                         </div>
@@ -422,8 +428,8 @@ const Departments = () => {
                     >
                       <option value="">Select a manager</option>
                       {employees.map((employee) => (
-                        <option key={employee.Id} value={employee.Id}>
-                          {employee.firstName} {employee.lastName} - {employee.role}
+<option key={employee.Id} value={employee.Id}>
+                          {employee.first_name_c} {employee.last_name_c} - {employee.role_c}
                         </option>
                       ))}
                     </select>

@@ -31,7 +31,7 @@ const TimeOff = () => {
       setLoading(true);
       setError("");
       
-      const data = await timeOffService.getAll();
+const data = await timeOffService.getAll();
       setRequests(data);
     } catch (err) {
       setError("Failed to load time off requests");
@@ -41,11 +41,11 @@ const TimeOff = () => {
   };
 
   const handleStatusChange = async (requestId, newStatus) => {
-    try {
-      await timeOffService.updateStatus(requestId, newStatus);
+try {
+      await timeOffService.updateStatus(requestId, newStatus, "Admin User");
       setRequests(requests.map(req => 
         req.Id === requestId 
-          ? { ...req, status: newStatus, approvedBy: "Admin User" }
+          ? { ...req, status_c: newStatus, approved_by_c: "Admin User" }
           : req
       ));
     } catch (err) {
@@ -53,8 +53,8 @@ const TimeOff = () => {
     }
   };
 
-  const filteredRequests = requests.filter(request => {
-    const matchesStatus = !statusFilter || request.status === statusFilter;
+const filteredRequests = requests.filter(request => {
+    const matchesStatus = !statusFilter || request.status_c === statusFilter;
     return matchesStatus;
   });
 
@@ -63,12 +63,12 @@ const TimeOff = () => {
   const monthEnd = endOfMonth(currentMonth);
   const monthDays = eachDayOfInterval({ start: monthStart, end: monthEnd });
   
-  const approvedRequests = requests.filter(req => req.status === "Approved");
+const approvedRequests = requests.filter(req => req.status_c === "Approved");
   
   const getDayRequests = (day) => {
     return approvedRequests.filter(req => {
-      const startDate = new Date(req.startDate);
-      const endDate = new Date(req.endDate);
+      const startDate = new Date(req.start_date_c);
+      const endDate = new Date(req.end_date_c);
       return day >= startDate && day <= endDate;
     });
   };
@@ -94,7 +94,7 @@ const TimeOff = () => {
               <div>
                 <p className="text-sm text-slate-600">Pending</p>
                 <p className="text-xl font-bold text-slate-900">
-                  {requests.filter(r => r.status === "Pending").length}
+{requests.filter(r => r.status_c === "Pending").length}
                 </p>
               </div>
             </div>
@@ -107,8 +107,8 @@ const TimeOff = () => {
               </div>
               <div>
                 <p className="text-sm text-slate-600">Approved</p>
-                <p className="text-xl font-bold text-slate-900">
-                  {requests.filter(r => r.status === "Approved").length}
+<p className="text-xl font-bold text-slate-900">
+                  {requests.filter(r => r.status_c === "Approved").length}
                 </p>
               </div>
             </div>
@@ -121,8 +121,8 @@ const TimeOff = () => {
               </div>
               <div>
                 <p className="text-sm text-slate-600">Rejected</p>
-                <p className="text-xl font-bold text-slate-900">
-                  {requests.filter(r => r.status === "Rejected").length}
+<p className="text-xl font-bold text-slate-900">
+                  {requests.filter(r => r.status_c === "Rejected").length}
                 </p>
               </div>
             </div>
@@ -195,7 +195,7 @@ const TimeOff = () => {
               <div className="space-y-4">
                 {filteredRequests.map(request => (
                   <TimeOffCard
-                    key={request.Id}
+key={request.Id}
                     request={request}
                     onStatusChange={handleStatusChange}
                   />
@@ -262,10 +262,10 @@ const TimeOff = () => {
                     <div className="space-y-1">
                       {dayRequests.slice(0, 2).map(req => (
                         <div
-                          key={req.Id}
+key={req.Id}
                           className="text-xs bg-primary-100 text-primary-800 px-2 py-1 rounded truncate"
                         >
-                          {req.employeeName}
+                          {req.employee_name_c}
                         </div>
                       ))}
                       {dayRequests.length > 2 && (

@@ -1,17 +1,20 @@
-import React, { useState, useEffect } from "react";
-import { useOutletContext, useParams, useNavigate } from "react-router-dom";
-import Header from "@/components/organisms/Header";
-import Card from "@/components/atoms/Card";
-import Badge from "@/components/atoms/Badge";
-import Button from "@/components/atoms/Button";
-import Avatar from "@/components/atoms/Avatar";
-import ApperIcon from "@/components/ApperIcon";
-import Loading from "@/components/ui/Loading";
-import Error from "@/components/ui/Error";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { employeeService } from "@/services/api/employeeService";
 import { timeOffService } from "@/services/api/timeOffService";
 import { attendanceService } from "@/services/api/attendanceService";
 import { format } from "date-fns";
+import ApperIcon from "@/components/ApperIcon";
+import Card from "@/components/atoms/Card";
+import Button from "@/components/atoms/Button";
+import Badge from "@/components/atoms/Badge";
+import Avatar from "@/components/atoms/Avatar";
+import Employees from "@/components/pages/Employees";
+import Attendance from "@/components/pages/Attendance";
+import Header from "@/components/organisms/Header";
+import Error from "@/components/ui/Error";
+import Empty from "@/components/ui/Empty";
+import Loading from "@/components/ui/Loading";
 
 const EmployeeDetail = () => {
   const { onMenuClick } = useOutletContext();
@@ -93,36 +96,36 @@ const EmployeeDetail = () => {
         <Card className="p-6">
           <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-6">
             <Avatar 
-              src={employee.photo} 
-              alt={`${employee.firstName} ${employee.lastName}`}
+src={employee.photo_c} 
+              alt={`${employee.first_name_c} ${employee.last_name_c}`}
               size="xl"
             />
             
             <div className="flex-1">
               <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-3">
                 <h1 className="text-2xl font-bold text-slate-900">
-                  {employee.firstName} {employee.lastName}
+{employee.first_name_c} {employee.last_name_c}
                 </h1>
-                <Badge variant={statusVariant[employee.status]}>
-                  {employee.status}
+<Badge variant={statusVariant[employee.status_c]}>
+                  {employee.status_c}
                 </Badge>
               </div>
               
-              <p className="text-lg text-slate-600 mt-1">{employee.role}</p>
-              <p className="text-slate-500">{employee.department}</p>
+<p className="text-lg text-slate-600 mt-1">{employee.role_c}</p>
+<p className="text-slate-500">{employee.department_c}</p>
               
               <div className="flex flex-wrap items-center mt-3 space-x-6 text-sm text-slate-500">
                 <div className="flex items-center">
                   <ApperIcon name="Mail" size={16} className="mr-2" />
-                  <span>{employee.email}</span>
+<span>{employee.email_c}</span>
                 </div>
-                <div className="flex items-center">
+<div className="flex items-center">
                   <ApperIcon name="Phone" size={16} className="mr-2" />
-                  <span>{employee.phone}</span>
+                  <span>{employee.phone_c}</span>
                 </div>
                 <div className="flex items-center">
                   <ApperIcon name="Calendar" size={16} className="mr-2" />
-                  <span>Started {format(new Date(employee.startDate), "MMM dd, yyyy")}</span>
+                  <span>Started {format(new Date(employee.start_date_c), "MMM dd, yyyy")}</span>
                 </div>
               </div>
             </div>
@@ -168,21 +171,21 @@ const EmployeeDetail = () => {
               <div className="space-y-4">
                 <div>
                   <label className="text-sm font-medium text-slate-600">Full Name</label>
-                  <p className="text-slate-900">{employee.firstName} {employee.lastName}</p>
+<p className="text-slate-900">{employee.first_name_c} {employee.last_name_c}</p>
                 </div>
                 <div>
                   <label className="text-sm font-medium text-slate-600">Email</label>
-                  <p className="text-slate-900">{employee.email}</p>
+<p className="text-slate-900">{employee.email_c}</p>
                 </div>
                 <div>
                   <label className="text-sm font-medium text-slate-600">Phone</label>
-                  <p className="text-slate-900">{employee.phone}</p>
+<p className="text-slate-900">{employee.phone_c}</p>
                 </div>
                 <div>
                   <label className="text-sm font-medium text-slate-600">Status</label>
                   <div className="mt-1">
-                    <Badge variant={statusVariant[employee.status]}>
-                      {employee.status}
+<Badge variant={statusVariant[employee.status_c]}>
+                      {employee.status_c}
                     </Badge>
                   </div>
                 </div>
@@ -194,16 +197,16 @@ const EmployeeDetail = () => {
               <div className="space-y-4">
                 <div>
                   <label className="text-sm font-medium text-slate-600">Position</label>
-                  <p className="text-slate-900">{employee.role}</p>
+<p className="text-slate-900">{employee.role_c}</p>
                 </div>
                 <div>
                   <label className="text-sm font-medium text-slate-600">Department</label>
-                  <p className="text-slate-900">{employee.department}</p>
+<p className="text-slate-900">{employee.department_c}</p>
                 </div>
                 <div>
                   <label className="text-sm font-medium text-slate-600">Start Date</label>
-                  <p className="text-slate-900">
-                    {format(new Date(employee.startDate), "MMMM dd, yyyy")}
+<p className="text-slate-900">
+                    {format(new Date(employee.start_date_c), "MMMM dd, yyyy")}
                   </p>
                 </div>
                 <div>
@@ -232,20 +235,20 @@ const EmployeeDetail = () => {
               </div>
             ) : (
               <div className="space-y-4">
-                {timeOffHistory.map((request) => (
+{timeOffHistory.map((request) => (
                   <div key={request.Id} className="flex items-center justify-between p-4 bg-slate-50 rounded-lg">
                     <div>
                       <div className="flex items-center space-x-3">
-                        <h4 className="font-medium text-slate-900">{request.type}</h4>
-                        <Badge variant={timeOffStatusVariant[request.status]}>
-                          {request.status}
+                        <h4 className="font-medium text-slate-900">{request.type_c}</h4>
+                        <Badge variant={timeOffStatusVariant[request.status_c]}>
+                          {request.status_c}
                         </Badge>
                       </div>
                       <p className="text-sm text-slate-600 mt-1">
-                        {format(new Date(request.startDate), "MMM dd, yyyy")} - {format(new Date(request.endDate), "MMM dd, yyyy")}
+                        {format(new Date(request.start_date_c), "MMM dd, yyyy")} - {format(new Date(request.end_date_c), "MMM dd, yyyy")}
                       </p>
-                      {request.reason && (
-                        <p className="text-sm text-slate-500 mt-1">{request.reason}</p>
+                      {request.reason_c && (
+                        <p className="text-sm text-slate-500 mt-1">{request.reason_c}</p>
                       )}
                     </div>
                   </div>
@@ -253,7 +256,7 @@ const EmployeeDetail = () => {
               </div>
             )}
           </Card>
-        )}
+)}
 
         {activeTab === "attendance" && (
           <Card className="p-6">
@@ -290,20 +293,20 @@ const EmployeeDetail = () => {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-200">
-                    {attendanceRecords.slice(0, 10).map((record) => (
+{attendanceRecords.slice(0, 10).map((record) => (
                       <tr key={record.Id} className="hover:bg-slate-50">
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
-                          {format(new Date(record.date), "MMM dd, yyyy")}
+                          {format(new Date(record.date_c), "MMM dd, yyyy")}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-600">
-                          {record.checkIn || "-"}
+                          {record.check_in_c || "-"}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-600">
-                          {record.checkOut || "-"}
+                          {record.check_out_c || "-"}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <Badge variant={record.status === "Present" ? "success" : "warning"}>
-                            {record.status}
+                          <Badge variant={record.status_c === "Present" ? "success" : "warning"}>
+                            {record.status_c}
                           </Badge>
                         </td>
                       </tr>

@@ -14,13 +14,13 @@ const TimeOffCard = ({ request, onStatusChange }) => {
   };
 
   const handleApprove = () => {
-    onStatusChange(request.Id, "Approved");
-    toast.success(`Time off request approved for ${request.employeeName}`);
+onStatusChange(request.Id, "Approved");
+    toast.success(`Time off request approved for ${request.employee_name_c}`);
   };
 
   const handleReject = () => {
-    onStatusChange(request.Id, "Rejected");
-    toast.error(`Time off request rejected for ${request.employeeName}`);
+onStatusChange(request.Id, "Rejected");
+    toast.error(`Time off request rejected for ${request.employee_name_c}`);
   };
 
   return (
@@ -28,35 +28,35 @@ const TimeOffCard = ({ request, onStatusChange }) => {
       <div className="flex items-center justify-between">
         <div className="flex-1">
           <div className="flex items-center space-x-3 mb-2">
-            <h3 className="font-semibold text-slate-900">
-              {request.employeeName}
+<h3 className="font-semibold text-slate-900">
+              {request.employee_name_c}
             </h3>
-            <Badge variant={statusVariant[request.status]}>
-              {request.status}
+            <Badge variant={statusVariant[request.status_c]}>
+              {request.status_c}
             </Badge>
           </div>
           
           <div className="space-y-1 text-sm text-slate-600">
             <div className="flex items-center">
               <ApperIcon name="Calendar" size={14} className="mr-2" />
-              <span>
-                {format(new Date(request.startDate), "MMM dd, yyyy")} - {format(new Date(request.endDate), "MMM dd, yyyy")}
+<span>
+                {format(new Date(request.start_date_c), "MMM dd, yyyy")} - {format(new Date(request.end_date_c), "MMM dd, yyyy")}
               </span>
             </div>
             <div className="flex items-center">
               <ApperIcon name="Tag" size={14} className="mr-2" />
-              <span>{request.type}</span>
+<span>{request.type_c}</span>
             </div>
-            {request.reason && (
+{request.reason_c && (
               <div className="flex items-start">
                 <ApperIcon name="MessageSquare" size={14} className="mr-2 mt-0.5" />
-                <span>{request.reason}</span>
+                <span>{request.reason_c}</span>
               </div>
             )}
           </div>
         </div>
         
-        {request.status === "Pending" && (
+{request.status_c === "Pending" && (
           <div className="flex space-x-2">
             <Button 
               variant="success" 
