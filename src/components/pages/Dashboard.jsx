@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useOutletContext, useNavigate } from "react-router-dom";
 import Header from "@/components/organisms/Header";
 import StatCard from "@/components/molecules/StatCard";
 import Card from "@/components/atoms/Card";
@@ -15,6 +15,7 @@ import { attendanceService } from "@/services/api/attendanceService";
 import { format } from "date-fns";
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const { onMenuClick } = useOutletContext();
   const [employees, setEmployees] = useState([]);
   const [timeOffRequests, setTimeOffRequests] = useState([]);
@@ -182,7 +183,11 @@ const upcomingTimeOff = timeOffRequests
         <Card className="p-6">
           <h3 className="text-lg font-semibold text-slate-900 mb-4">Quick Actions</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <Button variant="primary" className="justify-start">
+<Button 
+              variant="primary" 
+              className="justify-start"
+              onClick={() => navigate('/employees/new')}
+            >
               <ApperIcon name="UserPlus" size={16} className="mr-2" />
               Add Employee
             </Button>
